@@ -506,10 +506,11 @@ M.select = function(opts)
         vim.notify("Please save changes before entering new directory", vim.log.levels.ERROR)
         return
       end
-    else
-      if vim.w.is_oil_win then
-        vim.api.nvim_win_close(0, false)
-      end
+    -- NOTE: Don't close when edgy.
+    -- else
+    --   if vim.w.is_oil_win then
+    --     vim.api.nvim_win_close(0, false)
+    --   end
     end
 
     local mods = {
@@ -529,9 +530,13 @@ M.select = function(opts)
       if opts.tab then
         cmd = "tabedit"
       elseif opts.split then
-        cmd = "split"
+        if opts.vertical then
+          cmd = "vsplit"
+        else
+          cmd = "split"
+        end
       else
-        cmd = "edit"
+        cmd = "cmd"
       end
       vim.cmd({
         cmd = cmd,
